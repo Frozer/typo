@@ -22,8 +22,8 @@ module NavigationHelpers
 	  
 	when /^the show article page for article with id ([\d])$/
 	  article = Article.find($1)
-	  permalink = article.permalink_url()
-	  "/#{permalink}"
+	  permalink = article.permalink_url
+	  "#{permalink}"
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

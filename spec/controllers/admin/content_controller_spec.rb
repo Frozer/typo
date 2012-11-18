@@ -623,7 +623,7 @@ describe Admin::ContentController do
 		
 	  end
 	  
-	  it 'should save the returned article and destroy the originals' do
+	  it 'should save the returned article and destroy the original' do
 		@article1.stub(:destroy)
 		@article2.stub(:destroy)
 		@merged_article.stub(:save!).and_return(true)

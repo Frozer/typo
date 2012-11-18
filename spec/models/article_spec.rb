@@ -636,12 +636,23 @@ describe Article do
     before do
 	  @article1 = Factory(:article, :body => "test1")
 	  @article2 = Factory(:article, :body => "test2")
+	  Factory(:comment, :article => @article1)
+	  Factory(:comment, :article => @article2)
+	  Factory(:comment, :article => @article2)
 	  @merged_article = @article1.merge_with(@article2.id)
 	end
   
     it "should merge the body of the articles" do
 	  @merged_article.body.should include(@article1.body)
 	  @merged_article.body.should include(@article2.body)
+	end
+	
+	it "should carry over comments from both articles" do
+      puts @merged_article.comments.all
+	  @article2.comments.each do |comment|
+	    assert_equal(true, @merged_article.comments.exists?(comment))
+	  end
+	  
 	end
   
   end

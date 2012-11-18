@@ -39,6 +39,7 @@ class Admin::ContentController < Admin::BaseController
 
 	merged_article = main_article.merge_with(merge_with_article.id)
 	if merged_article.save!
+	  merge_with_article = Article.find(merge_with_article.id)
 	  merge_with_article.destroy
 	end
 	

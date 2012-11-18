@@ -12,3 +12,15 @@ Given /the following articles exist/ do |articles_table|
 	Article.create!(article)
   end
 end
+
+Given /article (\d) has comment with text "([^"]*)"/ do |articleid, commentbody|
+	article = Article.find(articleid)
+	comment = {:body => commentbody}
+	comment[:author] = "test"
+	comment[:email] = "test@test.test"
+	comment[:status_confirmed] = "t"
+	comment[:published] = "t"
+
+	c = article.add_comment(comment)
+	c.save!
+end

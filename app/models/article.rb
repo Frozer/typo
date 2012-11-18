@@ -75,6 +75,9 @@ class Article < Content
   def merge_with(merge_with_id)
     merge_with = Article.find(merge_with_id)
     self.body += merge_with.body
+	merge_with.comments.each do |comment|
+	  self.comments << comment
+	end
 	return self
   end
 
