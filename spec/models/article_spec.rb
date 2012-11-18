@@ -630,5 +630,20 @@ describe Article do
     end
 
   end
+  
+  describe "#merge_with" do
+  
+    before do
+	  @article1 = Factory(:article, :body => "test1")
+	  @article2 = Factory(:article, :body => "test2")
+	  @merged_article = @article1.merge_with(@article2.id)
+	end
+  
+    it "should merge the body of the articles" do
+	  @merged_article.body.should include(@article1.body)
+	  @merged_article.body.should include(@article2.body)
+	end
+  
+  end
 end
 

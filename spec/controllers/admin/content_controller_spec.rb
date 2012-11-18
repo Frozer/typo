@@ -606,6 +606,32 @@ describe Admin::ContentController do
         response.body.should == '<ul class="unstyled" id="autocomplete"><li>bar</li><li>bazz</li></ul>'
       end
     end
+	
+	describe 'admin can merge articles' do
+	  before do
+	    @article1 = Factory(:article, :user => @user, :title => "Test1", :body => "body1")
+		@article2 = Factory(:article, :user => @user, :title => "Test2", :body => "body2")
+		@merged_article = Factory(:article, :user => @user, :title => @article1.title, :body => @article1.body + @article2.body)
+		Article.stub(:find).with(@article1.id).and_return(@article1)
+		Article.stub(:find).with(@article2.id).and_return(@article2)
+		@article1.stub(:merge_with).with(@article2.id).and_return(@merged_article)
+      end
+	  
+	  it 'should call the model with the id' do
+		@article1.should_receive(:merge_with).with(@article2.id)
+		put :merge_with, :id => @article1.id, :merge_with => @article2.id
+		
+	  end
+	  
+	  it 'should save the returned article and destroy the originals' do
+		@article1.stub(:destroy)
+		@article2.stub(:destroy)
+		@merged_article.stub(:save!).and_return(true)
+		@merged_article.should_receive(:save!)
+		@article2.should_receive(:destroy)
+		put :merge_with, :id => @article1.id, :merge_with => @article2.id
+	  end
+	end
 
   end
 
@@ -670,5 +696,14 @@ describe Admin::ContentController do
       end
 
     end
+	
+	describe 'cannot merge articles' do
+	  it 'should redirect when trying to merge' do
+		article = Factory(:article, :user => @user)
+		put :merge_with, :id => article.id, :merge_with => @article.id
+		flash[:error].should == ("Error, you are not allowed to merge")
+		response.should redirect_to(:action => 'index')
+	  end
+	end
   end
 end

@@ -17,6 +17,13 @@ module NavigationHelpers
       '/'
     when /^the new article page$/
       '/admin/content/new'
+	when /^the edit article page for article with id ([\d])$/
+	  "/admin/content/edit/#{$1}/"
+	  
+	when /^the show article page for article with id ([\d])$/
+	  article = Article.find($1)
+	  permalink = article.permalink_url()
+	  "/#{permalink}"
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

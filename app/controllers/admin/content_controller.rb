@@ -26,6 +26,24 @@ class Admin::ContentController < Admin::BaseController
   def new
     new_or_edit
   end
+  
+  # Action added by Martin
+  def merge_with
+	unless current_user.admin?
+	  flash[:error] = _("Error, you are not allowed to merge")
+	  redirect_to :action => 'index'
+	  return
+	end
+	main_article = Article.find(params[:id])
+	merge_with_article = Article.find(params[:merge_with])
+
+	merged_article = main_article.merge_with(merge_with_article.id)
+	if merged_article.save!
+	  merge_with_article.destroy
+	end
+	
+	redirect_to :action => 'index'
+  end
 
   def edit
     @article = Article.find(params[:id])

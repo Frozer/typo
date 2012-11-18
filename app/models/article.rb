@@ -70,6 +70,13 @@ class Article < Content
       self.settings = {}
     end
   end
+  
+  # Added by Martin
+  def merge_with(merge_with_id)
+    merge_with = Article.find(merge_with_id)
+    self.body += merge_with.body
+	return self
+  end
 
   def set_permalink
     return if self.state == 'draft'
